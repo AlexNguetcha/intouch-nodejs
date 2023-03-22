@@ -1,5 +1,7 @@
-import axios from "axios";
-import { randomBytes } from "crypto";
+import axios, { AxiosInstance } from "axios";
+import { createHash, randomBytes } from "crypto";
+
+
 
 interface IntouchOptions {
     username: string;
@@ -208,10 +210,12 @@ class Intouch {
 
         const auth = {
             username: this.username,
-            password: this.password
+            password: this.password,
+            url: this._endpoint
         }
 
-        return await axios.put(this._endpoint, payload, { auth })
+
+        return await this.axiosRequest(this.username, this.password, this._endpoint, payload)
     }
 
 
@@ -260,7 +264,7 @@ class Intouch {
             "login_api": this.loginAgent,
             "password_api": this.passwordAgent,
         };
-                        
+
         const auth = {
             username: this.username,
             password: this.password
@@ -268,7 +272,50 @@ class Intouch {
 
         return await axios.post(this._endpoint, payload, { auth })
     }
-                                                    
+
+    async axiosRequest(username: string, password: string, url: string, data: object) {
+        try {
+            const response1 = await axios.post(url, null, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Digest username="' + username + '"'
+                },
+                // withCredentials: true
+            });
+
+            const authHeader = response1.headers['www-authenticate'];
+            const authHeaderParams = authHeader.match(/([a-zA-Z0-9]+)="([^"]*)"/g);
+            const params = {
+                realm: null,
+                nonce: null,
+                opaque: null,
+            };
+            authHeaderParams.forEach(param => {
+                const [key, value] = param.split('=');
+                params[key] = value.replace(/\"/g, '');
+            });
+
+            const authenticate1 = createHash('md5').update(username + ':' + params.realm + ':' + password);
+            const authenticate2 = createHash('md5').update('PUT:' + url);
+            const authenticateResponse = createHash('md5').update(authenticate1 + ':' + params.nonce + ':' + authenticate2);
+
+            const requestHeaders = {
+                'Content-Type': 'application/json',
+                'Authorization': 'Digest username="' + username + '", realm="' + params.realm + '", nonce="' + params.nonce + '", uri="' + url + '", response="' + authenticateResponse + '", opaque="' + params.opaque + '"'
+            };
+
+            const response2 = await axios.put(url, data, {
+                headers: requestHeaders,
+                // withCredentials: true
+            });
+
+            return response2;
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+
 }
 
 export default Intouch;
