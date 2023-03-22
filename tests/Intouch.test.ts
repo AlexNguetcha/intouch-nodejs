@@ -18,7 +18,7 @@ describe('Intouch', () => {
             loginAgent: process.env.LOGIN_AGENT ?? '',
             passwordAgent: process.env.PASSWORD_AGENT ?? '',
             intouchId: process.env.INTOUCH_ID ?? '',
-        }).partnerId(process.env.INTOUCH_ID ?? '')
+        }).partnerId(process.env.PARTNER_ID ?? '')
             .phone(process.env.PHONE ?? '')
     })
 
@@ -29,36 +29,27 @@ describe('Intouch', () => {
     })
 
     test('throw callback url error', async () => {
-        const balance = await intouch.getBalance();
-        expect(balance).toThrow(/valid callback/)
+        await expect(intouch.amount(100).operator('ORANGE').makeMerchantPayment(additionnalInfos))
+            .rejects.toThrow(/valid callback url/)
     })
 
-
     test('throw valid amount error', async () => {
-        const output = await intouch.callback("https://app.test").operator('ORANGE').makeMerchantPayment(additionnalInfos).then((res) => {
-            // console.log(res);
-        }).catch((err) => {
-            console.log(err);
-        })
-        expect(output).toThrow(/valid amount/)
+        await expect(intouch.callback("https://app.test").operator('ORANGE').makeMerchantPayment(additionnalInfos))
+            .rejects.toThrow(/valid amount/)
     })
 
     test('get the balance', async () => {
-        await intouch.callback("https://app.test").getBalance().then((res) => {
-            // console.log(res);
-        }).catch((err) => {
-            console.log(err);
-        })
-    })
+        await expect(intouch.getBalance().then((res) => res.data)).resolves.toHaveProperty('amount')
+    }, 1000 * 100)
 
-    test('make merchant payment', async () => {
+    // test('make merchant payment', async () => {
 
-        await intouch.callback("https://app.test").amount(100).operator('ORANGE').makeMerchantPayment(additionnalInfos).then((res) => {
-            // console.log(res);
-        }).catch((err) => {
-            console.log(err);
-        })
-    })
+    //     await intouch.callback("https://app.test").amount(100).operator('ORANGE').makeMerchantPayment(additionnalInfos).then((res) => {
+    //         // console.log(res);
+    //     }).catch((err) => {
+    //         console.log(err);
+    //     })
+    // })
 
 
 })

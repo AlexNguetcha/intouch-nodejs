@@ -260,7 +260,7 @@ class Intouch {
             "login_api": this.loginAgent,
             "password_api": this.passwordAgent,
         };
-
+                        
         const auth = {
             username: this.username,
             password: this.password
@@ -268,8 +268,7 @@ class Intouch {
 
         return await axios.post(this._endpoint, payload, { auth })
     }
-
-
+                                                    
 }
 
 export default Intouch;
