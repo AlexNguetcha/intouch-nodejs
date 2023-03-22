@@ -1,0 +1,18 @@
+# Node modules
+/node_modules
+
+# Build output dir
+/dist
+
+# Environnement
+.env
+
+# Test file
+/src/*.js
+/src/test.ts
+
+# Coverage
+coverage
+
+# Local test
+/local-test
