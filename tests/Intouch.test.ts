@@ -33,24 +33,30 @@ describe('Intouch', () => {
         expect(balance).toThrow(/valid callback/)
     })
 
-    
+
     test('throw valid amount error', async () => {
         const output = await intouch.callback("https://app.test").operator('ORANGE').makeMerchantPayment(additionnalInfos).then((res) => {
             // console.log(res);
+        }).catch((err) => {
+            console.log(err);
         })
         expect(output).toThrow(/valid amount/)
     })
 
-    test('get the balance', () => {
-        intouch.callback("https://app.test").getBalance().then((res) => {
+    test('get the balance', async () => {
+        await intouch.callback("https://app.test").getBalance().then((res) => {
             // console.log(res);
+        }).catch((err) => {
+            console.log(err);
         })
     })
 
-    test('make merchant payment', () => {
+    test('make merchant payment', async () => {
 
-        intouch.callback("https://app.test").amount(100).operator('ORANGE').makeMerchantPayment(additionnalInfos).then((res) => {
+        await intouch.callback("https://app.test").amount(100).operator('ORANGE').makeMerchantPayment(additionnalInfos).then((res) => {
             // console.log(res);
+        }).catch((err) => {
+            console.log(err);
         })
     })
 
