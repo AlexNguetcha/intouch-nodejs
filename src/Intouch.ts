@@ -121,9 +121,9 @@ class Intouch {
 
     private checkMinimumRequirements(operationType: string): void {
         if (['merchant', 'cashin', 'cashout'].includes(operationType)) {
-            if (isNaN(Number(this.amount))) {
+            if (isNaN(this._amount)) {
                 throw new Error('You must provide a valid amount for the transaction.');
-            } else if (parseInt(this._amount) < 100) {
+            } else if (this._amount < 100) {
                 throw new Error('Transaction amount must be greater than 100 XAF');
             }
         }
@@ -157,7 +157,7 @@ class Intouch {
                     // MTN
                     this.serviceCode('PAIEMENTMARCHAND_MTN_CM');
                 }
-                this.endpoint(this.replaceUrlAgentCredentials(GUTOUCH_API_URL));
+                this.endpoint(this.replaceUrlAgentCredentials(Intouch.GUTOUCH_API_URL));
                 break;
             case 'cashin':
                 if (this._operator === Intouch.SUPPORTED_OPERATORS[0]) {

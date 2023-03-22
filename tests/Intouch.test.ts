@@ -1,4 +1,3 @@
-
 import { beforeEach, describe, expect, test } from '@jest/globals';
 import Intouch from '../src';
 require('dotenv').config()
@@ -11,6 +10,7 @@ const additionnalInfos = {
 }
 
 describe('Intouch', () => {
+
     beforeEach(() => {
         intouch = Intouch.credentials({
             username: process.env.DIGEST_AUTH_USERNAME ?? '',
@@ -34,8 +34,8 @@ describe('Intouch', () => {
     })
 
     
-    test('throw  valid amount error', () => {
-        const output = intouch.callback("https://app.test").makeMerchantPayment(additionnalInfos).then((res) => {
+    test('throw valid amount error', async () => {
+        const output = await intouch.callback("https://app.test").operator('ORANGE').makeMerchantPayment(additionnalInfos).then((res) => {
             // console.log(res);
         })
         expect(output).toThrow(/valid amount/)
@@ -49,7 +49,7 @@ describe('Intouch', () => {
 
     test('make merchant payment', () => {
 
-        intouch.callback("https://app.test").amount().makeMerchantPayment(additionnalInfos).then((res) => {
+        intouch.callback("https://app.test").amount(100).operator('ORANGE').makeMerchantPayment(additionnalInfos).then((res) => {
             // console.log(res);
         })
     })
