@@ -1,10 +1,14 @@
 
-import { beforeEach, describe, expect, it, test } from '@jest/globals';
+import { beforeEach, describe, expect, test } from '@jest/globals';
 import Intouch from '../src';
 require('dotenv').config()
 
-
 var intouch: Intouch;
+const additionnalInfos = {
+    recipientEmail: "nguetchaalex@gmail.com",
+    recipientFirstName: "Alex",
+    recipientLastName: "Nguetcha",
+}
 
 describe('Intouch', () => {
     beforeEach(() => {
@@ -18,16 +22,24 @@ describe('Intouch', () => {
             .phone(process.env.PHONE ?? '')
     })
 
-    // test('throw Unsupported operator error', () => {
-    //     expect(() => {
-    //         intouch.operator('unsupported operator');
-    //     }).toThrow(/Unsupported operator/)
-    // })
+    test('throw Unsupported operator error', () => {
+        expect(() => {
+            intouch.operator('unsupported operator');
+        }).toThrow(/Unsupported operator/)
+    })
 
-    // test('throw callback url error', async () => {
-    //     const balance = await intouch.getBalance();
-    //     expect(balance).toThrow(/valid callback/)
-    // })
+    test('throw callback url error', async () => {
+        const balance = await intouch.getBalance();
+        expect(balance).toThrow(/valid callback/)
+    })
+
+    
+    test('throw  valid amount error', () => {
+        const output = intouch.callback("https://app.test").makeMerchantPayment(additionnalInfos).then((res) => {
+            // console.log(res);
+        })
+        expect(output).toThrow(/valid amount/)
+    })
 
     test('get the balance', () => {
         intouch.callback("https://app.test").getBalance().then((res) => {
@@ -36,14 +48,11 @@ describe('Intouch', () => {
     })
 
     test('make merchant payment', () => {
-        const additionnalInfos = {
-            recipientEmail: "nguetchaalex@gmail.com",
-            recipientFirstName: "Alex",
-            recipientLastName: "Nguetcha",
-        }
-        intouch.callback("https://app.test").makeMerchantPayment(additionnalInfos).then((res) => {
+
+        intouch.callback("https://app.test").amount().makeMerchantPayment(additionnalInfos).then((res) => {
             // console.log(res);
         })
     })
+
 
 })

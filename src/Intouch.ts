@@ -43,7 +43,7 @@ class Intouch {
     private _callback!: string;
     private _endpoint!: string;
     private _serviceCode!: string;
-    private _amount!: string;
+    private _amount!: number;
     private _phone!: string;
     private _partnerId!: string;
     private _operator!: string;
@@ -78,7 +78,7 @@ class Intouch {
         return this;
     }
 
-    amount(amount: string): Intouch {
+    amount(amount: number): Intouch {
         this._amount = amount;
         return this;
     }
@@ -185,7 +185,7 @@ class Intouch {
      * @param idFromClient 
      * @returns 
      */
-    async makeMerchantPayment(additionnalInfos: AdditionnalPaymentInfos, idFromClient?: string | null) {
+    async makeMerchantPayment(additionnalInfos: AdditionnalPaymentInfos, idFromClient: string | null = null) {
 
         this.checkMinimumRequirements('merchant')
         this.setTheRightServiceCodeAndEndpoint("merchant")
@@ -214,7 +214,7 @@ class Intouch {
      * @param partnerTransactionId 
      * @returns 
      */
-    async makeCashin(partnerTransactionId?: string | null) {
+    async makeCashin(partnerTransactionId: string | null = null) {
 
         this.checkMinimumRequirements('cashin')
         this.setTheRightServiceCodeAndEndpoint("cashin")
