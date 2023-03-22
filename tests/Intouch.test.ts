@@ -22,29 +22,29 @@ describe('Intouch', () => {
             .phone(process.env.PHONE ?? '')
     })
 
-    // test('throw Unsupported operator error', () => {
-    //     expect(() => {
-    //         intouch.operator('unsupported operator');
-    //     }).toThrow(/Unsupported operator/)
-    // })
+    test('throw Unsupported operator error', () => {
+        expect(() => {
+            intouch.operator('unsupported operator');
+        }).toThrow(/Unsupported operator/)
+    })
 
-    // test('throw callback url error', async () => {
-    //     await expect(intouch.amount(100).operator('ORANGE')
-    //         .makeMerchantPayment(additionnalInfos))
-    //         .rejects.toThrow(/valid callback url/)
-    // })
+    test('throw callback url error', async () => {
+        await expect(intouch.amount(100).operator('ORANGE')
+            .makeMerchantPayment(additionnalInfos))
+            .rejects.toThrow(/valid callback url/)
+    })
 
-    // test('throw valid amount error', async () => {
-    //     await expect(intouch.callback("https://app.test")
-    //         .operator('ORANGE')
-    //         .makeMerchantPayment(additionnalInfos))
-    //         .rejects.toThrow(/valid amount/)
-    // })
+    test('throw valid amount error', async () => {
+        await expect(intouch.callback("https:app.test")
+            .operator('ORANGE')
+            .makeMerchantPayment(additionnalInfos))
+            .rejects.toThrow(/valid amount/)
+    })
 
-    // test('get the balance', async () => {
-    //     await expect(intouch.getBalance().then((res) => res.data))
-    //         .resolves.toHaveProperty('amount')
-    // }, 1000 * 100)
+    test('get the balance', async () => {
+        await expect(intouch.getBalance().then((res) => res.data))
+            .resolves.toHaveProperty('amount')
+    }, 1000 * 100)
 
     test('make merchant payment', async () => {
         await expect(intouch.callback("https://app.test").amount(100)
