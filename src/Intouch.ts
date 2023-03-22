@@ -46,6 +46,7 @@ class Intouch {
     private loginAgent: string;
     private passwordAgent: string;
     private intouchId: string;
+
     private _callback!: string;
     private _endpoint!: string;
     private _serviceCode!: string;
