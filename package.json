@@ -6,13 +6,16 @@
   "directories": {
     "test": "tests"
   },
+  "publishConfig": {
+    
+  },
   "jest": {
     "collectCoverage": true
   },
   "scripts": {
     "test": "jest",
-    "build": "tsc --outDir dist",
-    "check": "tsc local-test/test.ts && node local-test/test.js"
+    "build": "tsc"
+
   },
   "author": "Alex Nguetcha <nguetchaalex@gmail.com>",
   "license": "MIT",
