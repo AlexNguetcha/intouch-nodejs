@@ -24,6 +24,12 @@ class Intouch {
     static GUTOUCH_API_CASHIN_URL = "https://api.gutouch.com/v1/[INTOUCH_ID]/cashin";
 
     /**
+     * Intouch Cameroon Service Code for merchant payment transaction
+     */
+    static OM_MERCHANT_PAYMENT = "CM_PAIEMENTMARCHAND_OM_TP";
+    static MOMO_MERCHANT_PAYMENT = "CASHINMTNCM2_DYNATECH";
+
+    /**
      * Intouch Cameroon Service Code for cash-in transaction
      */
     static OM_CASH_IN = "CASHINOMCMB2BDIST";
@@ -152,10 +158,10 @@ class Intouch {
             case 'merchant':
                 if (this._operator === Intouch.SUPPORTED_OPERATORS[0]) {
                     // ORANGE
-                    this.serviceCode('CM_PAIEMENTMARCHAND_OM_TP');
+                    this.serviceCode(Intouch.OM_MERCHANT_PAYMENT);
                 } else if (this._operator === Intouch.SUPPORTED_OPERATORS[1]) {
                     // MTN
-                    this.serviceCode('PAIEMENTMARCHAND_MTN_CM');
+                    this.serviceCode(Intouch.MOMO_MERCHANT_PAYMENT);
                 }
                 this.endpoint(this.replaceUrlAgentCredentials(Intouch.GUTOUCH_API_URL));
                 break;
