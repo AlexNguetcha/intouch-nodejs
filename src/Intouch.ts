@@ -50,7 +50,7 @@ class Intouch {
     private _callback!: string;
     private _endpoint!: string;
     private _serviceCode!: string;
-    private _amount: number | null = null;
+    private _amount!: number;
     private _phone!: string;
     private _partnerId!: string;
     private _operator!: string;
