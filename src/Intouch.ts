@@ -1,4 +1,5 @@
 import axios from "axios";
+import { randomBytes } from "crypto";
 
 
 /**
@@ -32,6 +33,12 @@ interface IntouchOptions {
 
 }
 
+interface AdditionnalPaymentInfos{
+    recipientEmail: string,
+    recipientFirstName: string,
+    recipientLastName: string,
+}
+
 class Intouch {
     static SUPPORTED_OPERATORS: [string, string] = ['ORANGE', 'MTN'];
     static GUTOUCH_API_GETBALANCE = "https://api.gutouch.com/v1/[INTOUCH_ID]/get_balance";
@@ -62,6 +69,7 @@ class Intouch {
     private _phone!: string;
     private _partnerId!: string;
     private _operator!: string;
+    private _idFromClient: string | number;
 
 
     protected constructor(options: IntouchOptions) {
@@ -99,6 +107,11 @@ class Intouch {
     serviceCode(serviceCode: string): Intouch {
         this._serviceCode = serviceCode;
         return this;
+    }
+
+    idFromClient(clientId: string | number): Intouch {
+        this._idFromClient = clientId
+        return this
     }
 
     amount(amount: string): Intouch {
@@ -159,7 +172,7 @@ class Intouch {
             throw new Error('You must provide a valid phone number 6abcdefgh.');
         }
 
-        if (!this.isValidUrl(this._callback) && ['merchant', 'cashin', 'cashout', 'balance'].includes(operationType)) {
+        if (!this.isValidUrl(this._callback) && ['merchant', 'cashin', 'cashout'].includes(operationType)) {
             throw new Error('You must provide a valid callback url.');
         }
     }
@@ -201,15 +214,33 @@ class Intouch {
         }
     }
 
+    async makeMerchantPayment(additionnalInfos: AdditionnalPaymentInfos) {
+        this.checkMinimumRequirements('merchant')
+        this.setTheRightServiceCodeAndEndpoint("merchant")
+        const payload = {
+            'idFromClient': this._idFromClient ?? randomBytes(12).toString(),
+            'amount': this._amount,
+            'callback': this._callback,
+            'recipientNumber': this.phone,
+            'serviceCode': this.serviceCode,
+            'additionnalInfos': additionnalInfos
+        };
+        const auth = {
+            username: this.username,
+            password: this.password
+        }
+        return await axios.put(this._endpoint, payload, { auth })
+    }
+
     async getBalance() {
         this.checkMinimumRequirements('balance')
         this.setTheRightServiceCodeAndEndpoint('balance')
         const payload = {
-            "partner_id": this.partnerId,
+            "partner_id": this._partnerId,
             "login_api": this.loginAgent,
             "password_api": this.passwordAgent,
         };
-        const auth = { 
+        const auth = {
             username: this.username,
             password: this.password
         }

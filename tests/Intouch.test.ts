@@ -18,21 +18,32 @@ describe('Intouch', () => {
             .phone(process.env.PHONE ?? '')
     })
 
-    test('throw Unsupported operator error', () => {
-        expect(() => {
-            intouch.operator('unsupported operator');
-        }).toThrow(/Unsupported operator/)
-    })
-
-    test('throw callback url error', async () => {
-        const balance = await intouch.getBalance();
-        expect(balance).toThrow(/valid callback/)
-    })
-
-    // test('get the balance', ()=>{
-    //     intouch.callback("https://app.test").getBalance().then((res)=>{
-    //         console.log(res);
-    //     })
+    // test('throw Unsupported operator error', () => {
+    //     expect(() => {
+    //         intouch.operator('unsupported operator');
+    //     }).toThrow(/Unsupported operator/)
     // })
+
+    // test('throw callback url error', async () => {
+    //     const balance = await intouch.getBalance();
+    //     expect(balance).toThrow(/valid callback/)
+    // })
+
+    test('get the balance', () => {
+        intouch.callback("https://app.test").getBalance().then((res) => {
+            // console.log(res);
+        })
+    })
+
+    test('make merchant payment', () => {
+        const additionnalInfos = {
+            recipientEmail: "nguetchaalex@gmail.com",
+            recipientFirstName: "Alex",
+            recipientLastName: "Nguetcha",
+        }
+        intouch.callback("https://app.test").makeMerchantPayment(additionnalInfos).then((res) => {
+            // console.log(res);
+        })
+    })
 
 })

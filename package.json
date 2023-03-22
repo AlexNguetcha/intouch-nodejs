@@ -12,7 +12,7 @@
   "scripts": {
     "test": "jest",
     "build": "tsc --outDir dist",
-    "check": "tsc local-test/test.ts --outDir local-test/ && node local-test/test.js"
+    "check": "tsc local-test/test.ts && node local-test/test.js"
   },
   "author": "Alex Nguetcha <nguetchaalex@gmail.com>",
   "license": "MIT",
