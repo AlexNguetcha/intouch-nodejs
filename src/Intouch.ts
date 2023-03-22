@@ -1,29 +1,6 @@
 import axios from "axios";
 import { randomBytes } from "crypto";
 
-
-/**
- * URL for merchant payment endpoint
- */
-const GUTOUCH_API_URL = "https://api.gutouch.com/dist/api/touchpayapi/v1/[INTOUCH_ID]/transaction?loginAgent=[LOGIN_AGENT]&passwordAgent=[PASSWORD_AGENT]";
-
-/**
- * URL for cash-in payment endpoint
- */
-const GUTOUCH_API_CASHIN_URL = "https://api.gutouch.com/v1/[INTOUCH_ID]/cashin";
-
-/**
- * URL for checking Intouch balance endpoint
- */
-const GUTOUCH_API_GETBALANCE = "https://api.gutouch.com/v1/[INTOUCH_ID]/get_balance";
-
-/**
- * Supported ISP operators
- * 
- * @var array SUPPORTED_OPERATORS
- */
-// const SUPPORTED_OPERATORS = ['ORANGE', 'MTN'];
-
 interface IntouchOptions {
     username: string;
     password: string;
@@ -33,7 +10,7 @@ interface IntouchOptions {
 
 }
 
-interface AdditionnalPaymentInfos{
+interface AdditionnalPaymentInfos {
     recipientEmail: string,
     recipientFirstName: string,
     recipientLastName: string,
@@ -41,6 +18,7 @@ interface AdditionnalPaymentInfos{
 
 class Intouch {
     static SUPPORTED_OPERATORS: [string, string] = ['ORANGE', 'MTN'];
+
     static GUTOUCH_API_GETBALANCE = "https://api.gutouch.com/v1/[INTOUCH_ID]/get_balance";
     static GUTOUCH_API_URL = "https://api.gutouch.com/dist/api/touchpayapi/v1/[INTOUCH_ID]/transaction?loginAgent=[LOGIN_AGENT]&passwordAgent=[PASSWORD_AGENT]";
     static GUTOUCH_API_CASHIN_URL = "https://api.gutouch.com/v1/[INTOUCH_ID]/cashin";
@@ -69,10 +47,9 @@ class Intouch {
     private _phone!: string;
     private _partnerId!: string;
     private _operator!: string;
-    private _idFromClient: string | number;
 
 
-    protected constructor(options: IntouchOptions) {
+    private constructor(options: IntouchOptions) {
         this.username = options.username;
         this.password = options.password;
         this.loginAgent = options.loginAgent;
@@ -91,14 +68,6 @@ class Intouch {
         return url;
     }
 
-    apiResult(result: any): void {
-        this.apiResult = result;
-    }
-
-    getResult(): any {
-        return this.apiResult;
-    }
-
     endpoint(endpoint: string): Intouch {
         this._endpoint = endpoint;
         return this;
@@ -107,11 +76,6 @@ class Intouch {
     serviceCode(serviceCode: string): Intouch {
         this._serviceCode = serviceCode;
         return this;
-    }
-
-    idFromClient(clientId: string | number): Intouch {
-        this._idFromClient = clientId
-        return this
     }
 
     amount(amount: string): Intouch {
@@ -214,39 +178,89 @@ class Intouch {
         }
     }
 
-    async makeMerchantPayment(additionnalInfos: AdditionnalPaymentInfos) {
+    /**
+     * Make a merchant payment to the Intouch account
+     * 
+     * @param additionnalInfos 
+     * @param idFromClient 
+     * @returns 
+     */
+    async makeMerchantPayment(additionnalInfos: AdditionnalPaymentInfos, idFromClient?: string | null) {
+
         this.checkMinimumRequirements('merchant')
         this.setTheRightServiceCodeAndEndpoint("merchant")
+
         const payload = {
-            'idFromClient': this._idFromClient ?? randomBytes(12).toString(),
+            'idFromClient': idFromClient ?? randomBytes(12).toString(),
             'amount': this._amount,
             'callback': this._callback,
-            'recipientNumber': this.phone,
-            'serviceCode': this.serviceCode,
+            'recipientNumber': this._phone,
+            'serviceCode': this._serviceCode,
             'additionnalInfos': additionnalInfos
         };
+
         const auth = {
             username: this.username,
             password: this.password
         }
+
         return await axios.put(this._endpoint, payload, { auth })
     }
 
+
+    /**
+     * Send money from Intouch account
+     * 
+     * @param partnerTransactionId 
+     * @returns 
+     */
+    async makeCashin(partnerTransactionId?: string | null) {
+
+        this.checkMinimumRequirements('cashin')
+        this.setTheRightServiceCodeAndEndpoint("cashin")
+
+        const payload = {
+            'service_id': this._serviceCode,
+            'recipient_phone_number': this._phone,
+            'amount': this._amount,
+            "partner_id": this._partnerId,
+            "partner_transaction_id": partnerTransactionId ?? randomBytes(12).toString(),
+            "login_api": this.loginAgent,
+            "password_api": this.passwordAgent,
+            'call_back_url': this._callback,
+        };
+
+        const auth = {
+            username: this.username,
+            password: this.password
+        }
+
+        return await axios.post(this._endpoint, payload, { auth })
+    }
+
+    /**
+     * Get the intouch account current balance
+     * 
+     * @returns 
+     */
     async getBalance() {
+
         this.checkMinimumRequirements('balance')
         this.setTheRightServiceCodeAndEndpoint('balance')
+
         const payload = {
             "partner_id": this._partnerId,
             "login_api": this.loginAgent,
             "password_api": this.passwordAgent,
         };
+
         const auth = {
             username: this.username,
             password: this.password
         }
+
         return await axios.post(this._endpoint, payload, { auth })
     }
-
 
 
 }
