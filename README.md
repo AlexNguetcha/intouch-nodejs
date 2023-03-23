@@ -5,7 +5,7 @@ This is a TypeScript library for the Intouch API. It provides an easy-to-use int
 
 ## Intallation
 
-To use this library, you will need to install the `@alexnguetcha/intouch` package from NPM.
+To use this library, you will need to install the `intouch-api-wrapper` package from NPM.
 
 ```bash
 npm i intouch-api-wrapper
@@ -16,15 +16,16 @@ npm i intouch-api-wrapper
 To use this library, first import it and create an instance with your Intouch credentials:
 
 ```js
-import { Intouch } from "alexnguetcha/intouch";
+require('dotenv').config()
+const intouch = require('intouch-api-wrapper')
 
-const intouch = Intouch.credentials({
-  username: "YOUR_USERNAME",
-  password: "YOUR_PASSWORD",
-  loginAgent: "YOUR_LOGIN_AGENT",
-  passwordAgent: "YOUR_PASSWORD_AGENT",
-  intouchId: "YOUR_INTOUCH_ID",
-});
+const balance = intouch.default.credentials({
+    username: process.env.DIGEST_AUTH_USERNAME ?? '',
+    password: process.env.DIGEST_AUTH_PASSWORD ?? '',
+    loginAgent: process.env.LOGIN_AGENT ?? '',
+    passwordAgent: process.env.PASSWORD_AGENT ?? '',
+    intouchId: process.env.INTOUCH_ID ?? '',
+}).partnerId(process.env.PARTNER_ID ?? '');
 
 ```
 
