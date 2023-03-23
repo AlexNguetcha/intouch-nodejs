@@ -3,6 +3,8 @@ import Intouch from '../src';
 require('dotenv').config()
 
 var intouch: Intouch;
+
+// Replace these additional infos with your own
 const additionnalInfos = {
     recipientEmail: "nguetchaalex@gmail.com",
     recipientFirstName: "Alex",
