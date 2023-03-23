@@ -2,5 +2,11 @@ node_modules
 *.log
 *.test.*
 
+src
+
 coverage
 .idea
+
+# Environnement
+.env
+.example.env

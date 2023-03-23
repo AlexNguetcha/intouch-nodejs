@@ -220,7 +220,6 @@ class Intouch {
         })
     }
 
-
     /**
      * Send money from Intouch account
      * 
@@ -266,7 +265,7 @@ class Intouch {
             "login_api": this.loginAgent,
             "password_api": this.passwordAgent,
         };
-
+                
         const auth = {
             username: this.username,
             password: this.password

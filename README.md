@@ -8,7 +8,7 @@ This is a TypeScript library for the Intouch API. It provides an easy-to-use int
 To use this library, you will need to install the `@alexnguetcha/intouch` package from NPM.
 
 ```bash
-npm install @alexnguetcha/intouch
+npm i intouch-api-wrapper
 ```
 
 # Usage
