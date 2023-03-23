@@ -1,6 +1,6 @@
 {
   "name": "intouch-api-wrapper",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "private": false,
   "description": "The Intouch Payment Library is a NodeJS library that provides a simple interface for making payments with mobile money service providers that are supported by the Intouch platform. This library handles the complexities of interacting with the Intouch API, allowing you to focus on building your application.",
   "author": {
