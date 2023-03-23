@@ -18,8 +18,11 @@ interface AdditionnalPaymentInfos {
     recipientLastName: string,
 }
 
+/**
+ * @author Alex Nguetcha <nguetchaalex@gmail.com>
+ */
 class Intouch {
-    static SUPPORTED_OPERATORS: [string, string] = ['ORANGE', 'MTN'];
+    static SUPPORTED_OPERATORS = ['ORANGE', 'MTN'];
 
     static GUTOUCH_API_GETBALANCE = "https://api.gutouch.com/v1/[INTOUCH_ID]/get_balance";
     static GUTOUCH_API_URL = "https://api.gutouch.com/dist/api/touchpayapi/v1/[INTOUCH_ID]/transaction?loginAgent=[LOGIN_AGENT]&passwordAgent=[PASSWORD_AGENT]";
