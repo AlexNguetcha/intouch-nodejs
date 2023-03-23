@@ -9,6 +9,9 @@ const additionnalInfos = {
     recipientLastName: "Nguetcha",
 }
 
+// Note: You need to add your Intouch credentials in a .env file
+// like .example.env file in the root directory
+
 describe('Intouch', () => {
 
     beforeEach(() => {
