@@ -12,6 +12,14 @@
   "directories": {
     "test": "tests"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alexnguetcha/intouch-nodejs.git"
+  },
+  "bugs": {
+    "url": "https://github.com/alexnguetcha/intouch-nodejs/issues"
+  },
+  "homepage": "https://github.com/alexnguetcha/intouch-nodejs#readme",
   "publishConfig": {},
   "jest": {
     "collectCoverage": true
