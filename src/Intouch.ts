@@ -1,7 +1,7 @@
 import axios, { AxiosInstance } from "axios";
 import { createHash, randomBytes } from "crypto";
-
-
+import md5 from 'crypto-js/md5';
+import DigestClient from 'digest-fetch'
 
 interface IntouchOptions {
     username: string;
@@ -200,22 +200,22 @@ class Intouch {
         this.setTheRightServiceCodeAndEndpoint("merchant")
 
         const payload = {
-            'idFromClient': idFromClient ?? randomBytes(12).toString(),
-            'amount': this._amount,
+            'idFromClient': idFromClient ?? Date.now(),
+            'amount': Number(this._amount),
             'callback': this._callback,
-            'recipientNumber': this._phone,
+            'recipientNumber': Number(this._phone),
             'serviceCode': this._serviceCode,
             'additionnalInfos': additionnalInfos
         };
 
-        const auth = {
-            username: this.username,
-            password: this.password,
-            url: this._endpoint
-        }
+        const client = new DigestClient(this.username, this.password)
 
-
-        return await this.axiosRequest(this.username, this.password, this._endpoint, payload)
+        return await client.fetch(this._endpoint, {
+            method: 'PUT', body: JSON.stringify(payload), headers: {
+                "Content-Type": "application/json",
+                "Content-Length": JSON.stringify(payload).length,
+            },
+        })
     }
 
 
@@ -275,12 +275,12 @@ class Intouch {
 
     async axiosRequest(username: string, password: string, url: string, data: object) {
         try {
-            const response1 = await axios.post(url, null, {
+            const response1 = await axios.post(url, data, {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': 'Digest username="' + username + '"'
                 },
-                // withCredentials: true
+                withCredentials: true
             });
 
             const authHeader = response1.headers['www-authenticate'];
@@ -295,18 +295,18 @@ class Intouch {
                 params[key] = value.replace(/\"/g, '');
             });
 
-            const authenticate1 = createHash('md5').update(username + ':' + params.realm + ':' + password);
-            const authenticate2 = createHash('md5').update('PUT:' + url);
-            const authenticateResponse = createHash('md5').update(authenticate1 + ':' + params.nonce + ':' + authenticate2);
+            const authenticate1 = md5(username + ':' + params.realm + ':' + password);
+            const authenticate2 = md5('PUT:' + url);
+            const authenticateResponse = md5(authenticate1 + ':' + params.nonce + ':' + authenticate2);
 
             const requestHeaders = {
-                'Content-Type': 'application/json',
+                'Content-Type': 'application/json;charset=UTF-8',
                 'Authorization': 'Digest username="' + username + '", realm="' + params.realm + '", nonce="' + params.nonce + '", uri="' + url + '", response="' + authenticateResponse + '", opaque="' + params.opaque + '"'
             };
 
             const response2 = await axios.put(url, data, {
                 headers: requestHeaders,
-                // withCredentials: true
+                withCredentials: true
             });
 
             return response2;
@@ -314,7 +314,6 @@ class Intouch {
             console.error(error);
         }
     }
-
 
 }
 
