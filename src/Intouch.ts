@@ -1,6 +1,5 @@
-import axios, { AxiosInstance } from "axios";
-import { createHash, randomBytes } from "crypto";
-import md5 from 'crypto-js/md5';
+import axios from "axios";
+import { randomBytes } from "crypto";
 import DigestClient from 'digest-fetch'
 
 interface IntouchOptions {
@@ -238,7 +237,7 @@ class Intouch {
             'recipient_phone_number': this._phone,
             'amount': this._amount,
             "partner_id": this._partnerId,
-            "partner_transaction_id": partnerTransactionId ?? randomBytes(12).toString(),
+            "partner_transaction_id": partnerTransactionId ?? Date.now(),
             "login_api": this.loginAgent,
             "password_api": this.passwordAgent,
             'call_back_url': this._callback,
@@ -274,48 +273,6 @@ class Intouch {
         }
 
         return await axios.post(this._endpoint, payload, { auth })
-    }
-
-    async axiosRequest(username: string, password: string, url: string, data: object) {
-        try {
-            const response1 = await axios.post(url, data, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Digest username="' + username + '"'
-                },
-                withCredentials: true
-            });
-
-            const authHeader = response1.headers['www-authenticate'];
-            const authHeaderParams = authHeader.match(/([a-zA-Z0-9]+)="([^"]*)"/g);
-            const params = {
-                realm: null,
-                nonce: null,
-                opaque: null,
-            };
-            authHeaderParams.forEach(param => {
-                const [key, value] = param.split('=');
-                params[key] = value.replace(/\"/g, '');
-            });
-
-            const authenticate1 = md5(username + ':' + params.realm + ':' + password);
-            const authenticate2 = md5('PUT:' + url);
-            const authenticateResponse = md5(authenticate1 + ':' + params.nonce + ':' + authenticate2);
-
-            const requestHeaders = {
-                'Content-Type': 'application/json;charset=UTF-8',
-                'Authorization': 'Digest username="' + username + '", realm="' + params.realm + '", nonce="' + params.nonce + '", uri="' + url + '", response="' + authenticateResponse + '", opaque="' + params.opaque + '"'
-            };
-
-            const response2 = await axios.put(url, data, {
-                headers: requestHeaders,
-                withCredentials: true
-            });
-
-            return response2;
-        } catch (error) {
-            console.error(error);
-        }
     }
 
 }
