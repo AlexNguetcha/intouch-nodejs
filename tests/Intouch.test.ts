@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test } from '@jest/globals';
-import Intouch from '../src';
+import { Intouch } from '../src';
 require('dotenv').config()
 
 var intouch: Intouch;
