@@ -19,27 +19,28 @@ To use this library, first import it and create an instance with your Intouch cr
 require('dotenv').config()
 const intouch = require('intouch-api-wrapper')
 
-const balance = intouch.credentials({
+const intouchPayment = intouch.Intouch.credentials({
     username: process.env.DIGEST_AUTH_USE
     password: process.env.DIGEST_AUTH_PASSWORD ?? '',
     loginAgent: process.env.LOGIN_AGENT ?? '',
     passwordAgent: process.env.PASSWORD_AGENT ?? '',
     intouchId: process.env.INTOUCH_ID ?? '',
-}).partnerId(process.env.PARTNER_ID ?? '');
+})
 
 ```
 
 ## Checking your balance
 
 ```js
-const balance = await intouch
+const balance = await intouchPayment
   .operator(Intouch.SUPPORTED_OPERATORS[0])
-  .partnerId("YOUR_PARTNER_ID")
+  .partnerId(process.env.PARTNER_ID ?? '')
   .getBalance();
 
 // retrieve balance amount
 
 balance.then((res)=>{
+    console.log(res.amount)
     // Response
     // {
     // "status": null,
@@ -47,7 +48,6 @@ balance.then((res)=>{
     // "errorCode": "200",
     // "errorMessage": "SUCCESSFUL"
     // }
-    console.log(res.amount)
 }).catch((err)=>{
     // Something went wrong !
     console.log(err)
@@ -66,12 +66,15 @@ const additionnalInfos = {
     recipientLastName: "Doe",
 }
 
-const merchantPayment = await intouch.callback("https://app.test")
+const merchantPayment = await intouchPayment.callback("https://app.test")
   .partnerId("YOUR_PARTNER_ID")
   .operator('ORANGE')
   .phone('695xxxx0x')
   .amount(500)
   .makeMerchantPayment(additionnalInfos);
+  .then(res => res.json())
+  .then(res => console.log(res))
+  .catch(err => console.log(err))
 
 // Response
 // {
