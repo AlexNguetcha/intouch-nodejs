@@ -13,3 +13,7 @@
 
 # Coverage
 coverage
+
+pakage-test
+
+*.tgz

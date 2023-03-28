@@ -19,8 +19,8 @@ To use this library, first import it and create an instance with your Intouch cr
 require('dotenv').config()
 const intouch = require('intouch-api-wrapper')
 
-const balance = intouch.default.credentials({
-    username: process.env.DIGEST_AUTH_USERNAME ?? '',
+const balance = intouch.credentials({
+    username: process.env.DIGEST_AUTH_USE
     password: process.env.DIGEST_AUTH_PASSWORD ?? '',
     loginAgent: process.env.LOGIN_AGENT ?? '',
     passwordAgent: process.env.PASSWORD_AGENT ?? '',

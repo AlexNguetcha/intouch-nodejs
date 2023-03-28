@@ -1,6 +1,5 @@
 import axios from "axios";
-import { randomBytes } from "crypto";
-import DigestClient from 'digest-fetch'
+const DigestFetch = require('digest-fetch')
 
 interface IntouchOptions {
     username: string;
@@ -20,7 +19,7 @@ interface AdditionnalPaymentInfos {
 /**
  * @author Alex Nguetcha <nguetchaalex@gmail.com>
  */
-class Intouch {
+export class Intouch {
     static SUPPORTED_OPERATORS = ['ORANGE', 'MTN'];
 
     static GUTOUCH_API_GETBALANCE = "https://api.gutouch.com/v1/[INTOUCH_ID]/get_balance";
@@ -210,7 +209,7 @@ class Intouch {
             'additionnalInfos': additionnalInfos
         };
 
-        const client = new DigestClient(this.username, this.password)
+        const client = new DigestFetch(this.username, this.password)
 
         return await client.fetch(this._endpoint, {
             method: 'PUT', body: JSON.stringify(payload), headers: {
@@ -265,7 +264,7 @@ class Intouch {
             "login_api": this.loginAgent,
             "password_api": this.passwordAgent,
         };
-                
+
         const auth = {
             username: this.username,
             password: this.password
@@ -275,5 +274,3 @@ class Intouch {
     }
 
 }
-
-export default Intouch;

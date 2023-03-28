@@ -1,3 +1,3 @@
-import Intouch from "./Intouch";
+import { Intouch } from "./Intouch";
 
 export default Intouch;

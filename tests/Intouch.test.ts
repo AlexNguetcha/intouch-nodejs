@@ -52,7 +52,7 @@ describe('Intouch', () => {
     }, 1000 * 100)
 
     test('make merchant payment', async () => {
-        let paymentAmount = Math.round(Math.random() * 500);
+        let paymentAmount = 100 + Math.round(Math.random() * 500);
         await expect(intouch.callback("https://app.test").amount(paymentAmount)
             .operator('ORANGE')
             .makeMerchantPayment(additionnalInfos)
