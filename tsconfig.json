@@ -2,14 +2,12 @@
   // Change this to match your project
   "include": [
     "src/**/*",
-    "./package.json"
   ],
   "exclude": [
     "tests"
   ],
   "compilerOptions": {
     "module": "CommonJS",
-    "resolveJsonModule": true,
     // Tells TypeScript to read JS files, as
     // normally they are ignored as source files
     "allowJs": true,
