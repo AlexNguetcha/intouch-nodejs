@@ -43,5 +43,12 @@
     "dotenv": "^16.0.3",
     "jest": "^29.5.0",
     "typescript": "^5.0.2"
-  }
+  },
+  "keywords": [
+    "nodejs",
+    "payment-integration",
+    "intouch",
+    "mobilemoney",
+    "gutouch"
+  ]
 }
